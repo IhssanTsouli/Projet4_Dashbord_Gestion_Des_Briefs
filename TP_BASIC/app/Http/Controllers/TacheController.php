@@ -36,10 +36,9 @@ class TacheController extends Controller
      */
     public function store(Request $request)
     {
-        $tache = Tache::create([
-            'name' => $request->tacheName
-
-         ])->save();
+        $tache =new Tache();
+        $tache->name=$request->input('name');
+        $tache->save();
     }
 
     /**

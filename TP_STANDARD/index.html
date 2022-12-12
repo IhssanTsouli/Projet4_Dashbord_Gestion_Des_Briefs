@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="ro"></div>
+    <script type="text/babel">
+
+        
+    class App extends React.Component{
+        
+        state={
+            arraytaches: [],
+            name: "",
+            
+        }
+        componentDidMount=()=>{
+        axios.get('http://127.0.0.1:8000/api/task').then(res=>{
+            //console.log(res.data);
+            this.setState({arraytaches:res.data});
+            
+        });
+    }
+       
+        handledelete=(id)=>{
+        axios.delete('http://127.0.0.1:8000/api/task/'+id).then(res=>{alert("delete success");
+        window.location.reload(false); 
+        
+    });
+    }
+                handlenom = (event) => {
+                    console.log( event.target.value);
+                    this.setState({name:event.target.value});
+                }
+                 
+
+                 handleSubmit =async (event) => {
+                    event.preventDefault();
+
+                    await axios.post("http://127.0.0.1:8000/api/task",this.state)
+                    .then(res => {
+                        console.log(res);
+                        console.log(res.data);
+                    }) .then((res)=> alert("add success"));
+                        window.location.reload(false); 
+                }
+        
+        render(){
+    return(
+        <div>
+           
+            <form onSubmit={this.handleSubmit}>
+                    <label>
+                        Name tache:
+                        <input type="text" name="name" onChange={this.handlenom} />
+                    </label>
+                   
+                    <button type="submit">Add</button>
+                    </form>
+            <table border="">
+                <thead>
+                    <th>nom tache</th>
+                    
+                </thead>
+                <tbody>
+                {this.state.arraytaches.map(tacheA=>
+            <tr>
+                <td>{tacheA.name}</td>
+               
+                <td><button onClick={()=>this.handledelete(tacheA.id)}>supprimer</button></td>
+                </tr>
+            )}
+        </tbody>
+                </table>    
+           
+        </div>
+        );
+    }
+    }
+    ReactDOM.render(<App/>,document.getElementById('root'));
+   
+    </script>
+</body>
+</html>
